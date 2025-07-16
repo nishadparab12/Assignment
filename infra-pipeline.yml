@@ -1,0 +1,27 @@
+trigger: none  # Manual only
+
+parameters:
+  - name: location
+    default: 'eastus'
+
+pool:
+ name: Default
+
+variables:
+  azureSubscription: 'Nishad_Demo_SC'
+  resourceGroupName: 'Nishad_Demo'
+
+stages:
+  - stage: DeployInfra
+    jobs:
+      - job: Deploy
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: $(azureSubscription)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                 az deployment group create \
+                  --resource-group $(resourceGroupName) \
+                  --template-file Bicep/main.bicep
